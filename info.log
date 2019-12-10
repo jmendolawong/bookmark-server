@@ -13,3 +13,9 @@
 {"message":"Deleted bookmark with id 0","level":"info"}
 {"message":"Deleted bookmark with id 1","level":"info"}
 {"message":"Bookmark with id 1 not found","level":"error"}
+{"message":"Unauthorized access to path /bookmarks/1","level":"error"}
+{"message":"Unauthorized request to path: /bookmarks","level":"error"}
+{"message":"Unauthorized request to path: /bookmarks","level":"error"}
+{"message":"Unauthorized request to path: /bookmarks","level":"error"}
+{"message":"Title is required","level":"error"}
+{"message":"Unauthorized request to path: /bookmarks","level":"error"}
