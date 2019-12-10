@@ -1,0 +1,15 @@
+{"message":"Created bookmark with id 301e2291-9087-47ff-a7bc-f9d854ea7d77","level":"info"}
+{"message":"Created bookmark with id 62a89246-2b95-4ac1-90c9-5cd156165db7","level":"info"}
+{"message":"Created bookmark with id 8ff6433d-7bd4-49a7-96cc-8cef78f9c3c7","level":"info"}
+{"message":"Created bookmark with id f77f7b7e-60ee-4119-b59b-a09c4d61e057","level":"info"}
+{"message":"Deleted bookmark with id f77f7b7e-60ee-4119-b59b-a09c4d61e057","level":"info"}
+{"message":"Unauthorized access to path /bookmarks","level":"error"}
+{"message":"Unauthorized access to path /bookmarks","level":"error"}
+{"message":"Unauthorized access to path /bookmarks","level":"error"}
+{"message":"Unauthorized access to path /bookmarks","level":"error"}
+{"message":"Created bookmark with id 5f2a356a-fb7c-4e03-82f7-c8d8a9d3285a","level":"info"}
+{"message":"Created bookmark with id ac59fc59-ef8b-457c-98eb-fde38ecee047","level":"info"}
+{"message":"Created bookmark with id 16014760-d49e-49cc-b29d-32b731e49aa1","level":"info"}
+{"message":"Deleted bookmark with id 0","level":"info"}
+{"message":"Deleted bookmark with id 1","level":"info"}
+{"message":"Bookmark with id 1 not found","level":"error"}
