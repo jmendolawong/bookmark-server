@@ -27,7 +27,7 @@ Sanitizing comes from preventing malicious embedded API responses
 */
 bookmarkRouter
   .route('/bookmarks')
-  .get((req, res) => {
+  .get((req, res, next) => {
     const knexInstance = req.app.get('db')
     BookmarksService.getAllBookmarks(knexInstance)
       .then(bookmarks => {
@@ -35,7 +35,7 @@ bookmarkRouter
       })
       .catch(next)
   })
-  .post(bodyParser, (req, res) => {
+  .post(bodyParser, (req, res, next) => {
     const { title, url, rating, description = "" } = req.body;
     const bookmark = { id, title, url, rating, description };
     const expectedRating = ['1', '2', '3', '4', '5']
@@ -59,6 +59,7 @@ bookmarkRouter
           .location(`http://localhost:8000/bookmarks/${id}`)
           .json(sanitizeBookmark(bookmark));
       })
+      .catch(next)
   })
 
 bookmarkRouter
@@ -66,7 +67,7 @@ bookmarkRouter
   .all((req, res, next) => {
     BookmarksService.getBookmarkById(
       req.app.get('db'),
-      req.params.id
+      req.params.bookmark_id
     )
       .then(bookmark => {
         if (!bookmark) {
@@ -80,7 +81,7 @@ bookmarkRouter
       .catch(next)
   })
   .get((req, res, next) => {
-    res.json(sanitizeBookmark(bookmark))
+    res.json(sanitizeBookmark(res.bookmark))
   })
   .delete((req, res, next) => {
     BookmarksService.deleteBookmark(req.app.get('db'), req.params.id)

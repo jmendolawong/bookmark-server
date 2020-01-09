@@ -28,8 +28,6 @@ app.use(function validateBearerToken(req, res, next) {
   next();
 })
 
-
-
 app.use((error, req, res, next) => {
   let response;
   if (NODE_ENV === 'production') {
