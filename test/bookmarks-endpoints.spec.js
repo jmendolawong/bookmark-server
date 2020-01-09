@@ -50,7 +50,7 @@ describe('Bookmarks endpoints', () => {
     })
   })
 
-  describe('GET /bookmarks/:bookmark_id', () => {
+  describe('GET /bookmarks/:id', () => {
 
     context(`Given there's no data in the database`, () => {
       it('responds with 404 and an empty array', () => {

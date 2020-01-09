@@ -6,36 +6,13 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config.js')
 const bookmarkRouter = require('./bookmark/bookmark-router')
 const logger = require('./logger')
-const BookmarksService = require('./bookmarks-service.js')
 
 const app = express();
 
 const morganSetting = NODE_ENV === 'production' ? 'tiny' : 'dev';
 app.use(morgan(morganSetting))
 app.use(helmet())
-
-app.get('/bookmarks', (req, res, next) => {
-  const knexInstance = req.app.get('db')
-  BookmarksService.getAllBookmarks(knexInstance)
-    .then(bookmarks => {
-      res.json(bookmarks)
-    })
-    .catch(next)
-})
-
-app.get('/bookmarks/:bookmark_id', (req, res, next) => {
-  const knexInstance = req.app.get('db')
-  BookmarksService.getBookmarkById(knexInstance, req.params.bookmark_id)
-    .then(bookmark => {
-      if(!bookmark){
-        return res.status(404).json({
-          error: {message: `Bookmark doesn't exist`}
-        })
-      }
-      res.json(bookmark)
-    })
-    .catch(next)
-})
+app.use(bookmarkRouter)
 
 app.use(cors())
 
@@ -52,7 +29,6 @@ app.use(function validateBearerToken(req, res, next) {
 })
 
 
-app.use(bookmarkRouter)
 
 app.use((error, req, res, next) => {
   let response;
