@@ -1,9 +1,10 @@
 const express = require('express')
-const uuid = require('uuid/v4')
+//const uuid = require('uuid/v4')
 const logger = require('../logger')
-const bookmarks = require('../store')
+//const bookmarks = require('../store')
 const BookmarksService = require('./bookmarks-service')
 const xss = require('xss')
+const path = require('path')
 
 const bookmarkRouter = express.Router()
 const bodyParser = express.json()
@@ -26,7 +27,7 @@ BookmarksService is where the database knex queries live
 Sanitizing comes from preventing malicious embedded API responses
 */
 bookmarkRouter
-  .route('/bookmarks')
+  .route('/')
   .get((req, res, next) => {
     const knexInstance = req.app.get('db')
     BookmarksService.getAllBookmarks(knexInstance)
@@ -36,15 +37,15 @@ bookmarkRouter
       .catch(next)
   })
   .post(bodyParser, (req, res, next) => {
-    const { title, url, rating, description = "" } = req.body;
-    const bookmark = { id, title, url, rating, description };
+    const { title, url, rating, description = "" } = req.body
+    const newBookmark = { title, url, rating, description }
     const expectedRating = ['1', '2', '3', '4', '5']
 
-    for (const [key, value] of Object.entries(bookmark)) {
-      if (key !== 'description' && value == null) {
+    for (const [key, value] of Object.entries(newBookmark)) {
+      if (key !== description && value == null) {
         logger.error(`${key} is required`)
         return res.status(400).json({
-          error: { message: `Missing ${key} in request body` }
+          error: { message: `Missing '${key}' in the request body` }
         })
       }
     }
@@ -53,17 +54,19 @@ bookmarkRouter
       return res.status(400).send('Invalid data')
     }
 
-    BookmarksService.insertBookmark(req.app.get('db'), bookmark)
+    BookmarksService.insertBookmark(
+      req.app.get('db'),
+      newBookmark)
       .then(bookmark => {
         res.status(201)
-          .location(`http://localhost:8000/bookmarks/${id}`)
+          .location(path.posix.join(req.originalUrl, `/${bookmark.id}`))
           .json(sanitizeBookmark(bookmark));
       })
       .catch(next)
   })
 
 bookmarkRouter
-  .route('/bookmarks/:bookmark_id')
+  .route('/:bookmark_id')
   .all((req, res, next) => {
     BookmarksService.getBookmarkById(
       req.app.get('db'),
@@ -84,7 +87,34 @@ bookmarkRouter
     res.json(sanitizeBookmark(res.bookmark))
   })
   .delete((req, res, next) => {
-    BookmarksService.deleteBookmark(req.app.get('db'), req.params.id)
+    BookmarksService.deleteBookmark(req.app.get('db'), req.params.bookmark_id)
+      .then(() => {
+        res.status(204).end()
+      })
+      .catch(next)
+  })
+  .patch(bodyParser, (req, res, next) => {
+    const { title, url, rating, description } = req.body
+    const bookmarkToUpdate = { title, url, rating, description }
+
+    /*This takes the values of the object - bookmarkToUpdate, i.e. 'updated title' into an array
+    filters (keeps) all values that are truthy in nature, aren't null or undefined
+    returns the length of the array. If there are no required values
+    send 400 + error message
+    numOfValues equals number of truthy/non-null values*/
+    const numOfValues = Object.values(bookmarkToUpdate).filter(Boolean).length
+    if (numOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'title', 'url' or 'rating'`
+        }
+      })
+    }
+
+    BookmarksService.updateBookmark(
+      req.app.get('db'),
+      req.params.bookmark_id,
+      bookmarkToUpdate)
       .then(() => {
         res.status(204).end()
       })

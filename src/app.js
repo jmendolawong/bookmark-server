@@ -12,7 +12,7 @@ const app = express();
 const morganSetting = NODE_ENV === 'production' ? 'tiny' : 'dev';
 app.use(morgan(morganSetting))
 app.use(helmet())
-app.use(bookmarkRouter)
+app.use('/api/bookmarks', bookmarkRouter)
 
 app.use(cors())
 
