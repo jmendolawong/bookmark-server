@@ -8,13 +8,15 @@ const bookmarkRouter = require('./bookmark/bookmark-router')
 const logger = require('./logger')
 
 const app = express();
+app.use(cors())
 
 const morganSetting = NODE_ENV === 'production' ? 'tiny' : 'dev';
 app.use(morgan(morganSetting))
 app.use(helmet())
+
 app.use('/api/bookmarks', bookmarkRouter)
 
-app.use(cors())
+
 
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN;

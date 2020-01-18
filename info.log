@@ -91,3 +91,6 @@
 {"message":"title is required","level":"error"}
 {"message":"url is required","level":"error"}
 {"message":"rating is required","level":"error"}
+{"message":"Unauthorized request to path: /favicon.ico","level":"error"}
+{"message":"Unauthorized request to path: /favicon.ico","level":"error"}
+{"message":"Unauthorized request to path: /favicon.ico","level":"error"}
